@@ -6,14 +6,18 @@ Roll: 18CS30040
 #include "toylib.h"
 
 int printStringUpper(char *str){
+    /*  prints a string of characters terminated by '\0'.
+        The return value id no of characters printed    */
     int size = 0;
 
-    while(str[size]!='0'){
+    while(str[size]!='\0'){
+        /*Getting string length*/
         if((int)'a'<=str[size] && str[size]<='z')
             str[size] -= (int)('a'-'A');
         size++;
     }
 
+    /* inline assembly line commands for system call to print "str" to STDOUT*/
     __asm__ __volatile__ (
         "movl $1, %%eax \n\t"
         "movq $1, %%rdi \n\t"
@@ -26,12 +30,15 @@ int printStringUpper(char *str){
 }
 
 int readHexInteger(int *n){
-    char arr[100];
+    /*Reads a hexadecimal integer and loads its decimal value in the pointer
+      The return value is the correctness of format.*/
+    char arr[100]={'0'};
     int byte_count = 20;
     int is_neg = 0;
     int count = 0;
     int val = 0;
 
+    /* inline assembly line commands for system call to read STDIN into arr*/
     __asm__ __volatile__ (
         "movl $0, %%eax \n\t"
         "movq $1, %%rdi \n\t"
@@ -40,12 +47,14 @@ int readHexInteger(int *n){
         :"S"(arr), "d"(byte_count)
     );
 
+    /* handles negative no.s */
     if(arr[count]=='-'){
         is_neg = 1;
         count++;
     }
 
     while(arr[count]!=' ' && arr[count]!='\t' && arr[count]!='\n'){
+        /* Convert from base-16 to decimal*/
         val*=16;
         if((int)'0'<=arr[count] && arr[count]<=(int)'9')
             val+= (int)(arr[count]-'0');
@@ -64,7 +73,9 @@ int readHexInteger(int *n){
 }
 
 int printHexInteger(int n){
-    char arr[100];
+    /*Prints an integer in hexadecimal format.
+      The return value id no of characters printed*/
+    char arr[100]={'0'};
     int count = 0;
     int is_neg=0;
     
@@ -76,6 +87,7 @@ int printHexInteger(int n){
         }
 
         while(n){
+            /*Converting binary to base-16*/
             int temp = n%16;
             if(temp<=9)
                 arr[count++]= temp+'0';
@@ -84,15 +96,18 @@ int printHexInteger(int n){
             n/=16;
         }
 
+        /* handles negative no.s */
         if(is_neg) arr[count++]='-';
         
+        /*adjusting the alignment of the representation*/
         for(int i=0;i < count/2; i++){
-            char swap = arr[i];
+            char swap = arr[count-i-1];
             arr[count-i-1] = arr[i];
             arr[i] = swap;
         }
     }
 
+    /* inline assembly line commands for system call to print "arr" to STDOUT*/
     __asm__ __volatile__ (
         "movl $1, %%eax \n\t"
         "movq $1, %%rdi \n\t"
@@ -105,7 +120,9 @@ int printHexInteger(int n){
 }
 
 int readFloat(float *f){
-    char arr[100];
+    /*  Reads a float value and  loads it in the pointer.
+        The return value is the correctness of format.    */
+    char arr[100]={'0'};
     int byte_count = 20;
     int is_neg = 0;
     int count = 0;
@@ -113,6 +130,7 @@ int readFloat(float *f){
     float val = 0;
     float div = 1.0;
 
+    /* inline assembly line commands for system call to read STDIN into arr*/
     __asm__ __volatile__ (
         "movl $0, %%eax \n\t"
         "movq $1, %%rdi \n\t"
@@ -121,6 +139,7 @@ int readFloat(float *f){
         :"S"(arr), "d"(byte_count)
     );
 
+    /* handles negative no.s */
     if(arr[count]=='-'){
         is_neg = 1;
         count++;
@@ -134,10 +153,11 @@ int readFloat(float *f){
         if(arr[count]=='.' && dot)
             return BAD;
         
-        if(arr[count]=='.')
+        if(arr[count]=='.'){
             dot = 1;
-        
-        if(dot){
+        }
+        else if(dot){
+            /*handles values after the decimal*/
             div*=10;
             val+=(float)(arr[count]-'0')/div;
         }
@@ -149,7 +169,8 @@ int readFloat(float *f){
         count++;
     }
 
-    if(is_neg) val*=val;
+    /* handles negative no.s */
+    if(is_neg) val*=(-1);
 
     *f = val;
 
@@ -157,9 +178,15 @@ int readFloat(float *f){
 }
 
 int printFloat(float f){
-    char arr[100];
+    /*  Prints a float value.
+        The return value is no of characters printed    */
+    char arr[100]={'0'};
     int count = 0;
     int is_neg = 0;
+    if(f<0){
+        f*=(-1);
+        is_neg = 1;
+    }
     int a = (int)f;
     float dec = f - a;
 
@@ -169,17 +196,12 @@ int printFloat(float f){
         arr[count++]='0';
     }
     else{
-        if(f<0){
-            f*=(-1);
-            is_neg = 1;
-        }
-
         while((dec-(int)dec)!=0){ dec*=10;}
         int temp_dec = (int)dec;
-        
+
+        /*hadnling after the decimal places*/
         if(!temp_dec){
             arr[count++]='0';
-            arr[count++]='.';
         }
         else{
             while(temp_dec){
@@ -187,21 +209,30 @@ int printFloat(float f){
                 temp_dec/=10;
             }    
         }
+        arr[count++]='.';
 
-        while(a){
-            arr[count++]= (a%10)+'0';
-            a/=10;
+        if(!a){
+            arr[count++]='0';
+        }
+        else{
+            while(a){
+                arr[count++]= (a%10)+'0';
+                a/=10;
+            }
         }
         
+        /* handles negative no.s */
         if(is_neg) arr[count++]='-';
-        
+
+        /*adjusting the alignment of the representation*/
         for(int i=0;i < count/2; i++){
-            char swap = arr[i];
+            char swap = arr[count-i-1];
             arr[count-i-1] = arr[i];
             arr[i] = swap;
         }
     }
 
+    /* inline assembly line commands for system call to print "arr" to STDOUT*/
     __asm__ __volatile__ (
         "movl $1, %%eax \n\t"
         "movq $1, %%rdi \n\t"

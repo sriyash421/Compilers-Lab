@@ -5,29 +5,40 @@ Roll: 18CS30040
 
 #include "toylib.h"
 
+/*
+main program to test the functions created
+*/
+
 int main()
 {
     int n, response;
-    printStringUpper("\nWARNING: Using inhouse print statement, things may break!\n");
-    printStringUpper("\nPlease enter a hexadecimal integer:\n");
+    
+    char msg1[] = "\nWARNING: Using inhouse print statement, things may break!\n";
+    printStringUpper(msg1);
+
+    char msg2[] = "\nPlease enter a hexadecimal integer:\n";
+    printStringUpper(msg2);
     response = readHexInteger(&n); 			   
     
     if(response == GOOD){
         printHexInteger(n);
     }
     else{
-        printStringUpper("\nInvalid input for hexadecimal integer!\n");
+        char msg3[] = "\nInvalid input for hexadecimal integer!\n";
+        printStringUpper(msg3);
     }
 
     float p;
-    printStringUpper("\nPlease enter a float value:\n");
+    char msg4[] = "\nPlease enter a float value:\n";
+    printStringUpper(msg4);
     response = readFloat(&p);
     
     if(response == GOOD){
         printFloat(p);
     }
     else{
-        printStringUpper("\nInvalid input for float!\n");
+        char msg5[] = "\nInvalid input for float!\n";
+        printStringUpper(msg5);
     }
 
     return 0;
