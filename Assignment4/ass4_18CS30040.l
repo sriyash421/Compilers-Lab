@@ -32,8 +32,8 @@ MULTI_END           [\*]+[/]
 MULTI_COMMENT       ({MULTI_START}{INSIDE_MULTI}*{MULTI_END})
 COMMENT             {MULTI_COMMENT}|{SINGLE_COMMENT}
 
-WHITESPACE          [ \t\n]
-PUNCTUATOR          "..." | "=" | "[" | "]" | "(" | ")" | "{" | "}" | "." | "&" | "*" | "+" | "-" | "~" | "!" | "/" | "%" | "<" | ">" | "^" | "|" | "?" | ":" | ";" | "|=" | "," | "#"
+WHITESPACE          [ \n\t]
+PUNCTUATOR          "["|"]"|"("|")"|"{"|"}"|"."|"&"|"*"|"+"|"-"|"~"|"!"|"/"|"%"|"<"|">"|"^"|"|"|"?"|":"|";"|"="|","|"#"
 
 %%
 "break"             { return BREAK;}
@@ -91,12 +91,12 @@ PUNCTUATOR          "..." | "=" | "[" | "]" | "(" | ")" | "{" | "}" | "." | "&" 
 
 
 
+{COMMENT}           {;}
+{PUNCTUATOR}        { return yytext[0];}
 {IDENTIFIER}        { return IDENTIFIER;}
 {FLOAT_CONST}       { return FLOAT_CONSTANT;}
 {CHAR_CONST}        { return CHAR_CONSTANT;}
 {STR_LIT}           { return STRING_LITERAL;}
 {INT_CONST}         { return INTEGER_CONSTANT;}
-{PUNCTUATOR}        { return yytext[0];}
 {WHITESPACE}        {;}
-{COMMENT}           {;}
 %%
