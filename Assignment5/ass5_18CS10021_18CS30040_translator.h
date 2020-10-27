@@ -1,16 +1,17 @@
-#ifndef _TRANSLATE_H
+// #ifndef _TRANSLATE_H
 #define _TRANSLATE_H
 
 #include <bits/stdc++.h>
-
+using namespace std;
 extern char *yytext;
 extern int yyparse();
 
-using namespace std;
+
 
 #define listsym_itr list<sym>::iterator
 #define list_int list<int>
 #define list_sym list<sym>
+
 
 class sym;
 class symboltype;
@@ -120,7 +121,7 @@ struct Statement{
 struct Array {
     string array_type;
     sym *loc;
-    sym *array;
+    sym *Array;
     symboltype *type;
 };
 
@@ -136,4 +137,4 @@ Expression *convertIntToBool(Expression *);
 Expression *convertBoolToInt(Expression *);
 bool typeCheck(Expression, Expression);
 
-#endif
+// #endif

@@ -1,9 +1,10 @@
 %{	
     #include <stdio.h>
 	#include <string.h>
-	#include "y.tab.h"
+	
 	#include "ass5_18CS10021_18CS30040_translator.h"
-	extern void yyerror(const char *);
+	#include "y.tab.h"
+	
 %}
 
 %option noyywrap

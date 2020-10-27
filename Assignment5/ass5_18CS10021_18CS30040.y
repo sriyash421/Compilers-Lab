@@ -201,8 +201,8 @@ postfix_expression
 		$$->type=$1->type->arrtype;				// type=type of element				
 		$$->Array=$1->Array;						// copy the base
 		$$->loc=gentemp(new symboltype("int"));		// store computed address
-		$$->atype="arr";						//atype is arr.
-		if($1->atype=="arr") 
+		$$->array_type="arr";						//array_type is arr.
+		if($1->array_type=="arr") 
 		{		
 			sym* t=gentemp(new symboltype("int"));
 			int p=computeSize($$->type);
@@ -301,7 +301,7 @@ unary_expression
 				emit("=&",$$->Array->name,$2->Array->name);
 				break;
 			case '*':                          //value of something, then generate a temporary of the corresponding type and emit the quad	
-				$$->atype="ptr";
+				$$->array_type="ptr";
 				$$->loc=gentemp($2->Array->type->arrtype);
 				$$->Array=$2->Array;
 				emit("=*",$$->loc->name,$2->Array->name);
@@ -357,7 +357,7 @@ multiplicative_expression
 	{
 
 		$$ = new Expression();             //generate new expression							    
-		if($1->atype=="arr") 			   //if it is of type arr
+		if($1->array_type=="arr") 			   //if it is of type arr
 		{
 			$$->loc = gentemp($1->loc->type);	
 
@@ -365,7 +365,7 @@ multiplicative_expression
 
 	
 		}
-		else if($1->atype=="ptr")         //if it is of type ptr
+		else if($1->array_type=="ptr")         //if it is of type ptr
 		{ 
 			$$->loc = $1->loc;        //equate the locs
 
@@ -830,7 +830,7 @@ assignment_expression
 	: conditional_expression {$$=$1;}         //simply equate
 	| unary_expression assignment_operator assignment_expression 
 	 {
-		if($1->atype=="arr")       //if type is arr, simply check if we need to convert and emit
+		if($1->array_type=="arr")       //if type is arr, simply check if we need to convert and emit
 		{
 	
 			$3->loc = convertType($3->loc, $1->type->type);
@@ -839,7 +839,7 @@ assignment_expression
 
 	
 		}
-		else if($1->atype=="ptr")     //if type is ptr, simply emit
+		else if($1->array_type=="ptr")     //if type is ptr, simply emit
 		{
 	
 			emit("*=", $1->Array->name, $3->loc->name);		

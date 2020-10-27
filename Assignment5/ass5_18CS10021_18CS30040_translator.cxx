@@ -468,16 +468,6 @@ int nextinstr(){
 	return qA.array.size();
 }
 
-void update_nextinstr(){
-	instr_count++;
-	if(debug_on==1)
-	{
-		cout<<"Current Line Number:"<<instr_count<<endl;
-		cout<<"Press [ENTER] to continue:";
-		cin.get();
-	}
-}
-
 int main(){
     bt.addType("null",0);
 	bt.addType("void",0);
