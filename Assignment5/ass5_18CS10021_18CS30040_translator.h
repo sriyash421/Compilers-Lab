@@ -38,7 +38,7 @@ class symboltype{
         int width;
         symboltype* arrtype;
 
-        symboltype(string, symboltype *ptr = NULL, int width = 1);
+        symboltype(string, symboltype *arrtype = NULL, int width = 1);
 };
 
 class symtable{
@@ -109,7 +109,7 @@ void update_nextinst();
 
 sym *convertType(sym *, string);
 bool compareSymbolType(sym *&s1, sym *&s2);
-bool compareSymbolType(symboltype *&t1, symboltype *&t2);
+bool compareSymbolType(symboltype *t1, symboltype *t2);
 int computeSize(symboltype *);
 string printType(symboltype *);
 void changeTable(symtable *);

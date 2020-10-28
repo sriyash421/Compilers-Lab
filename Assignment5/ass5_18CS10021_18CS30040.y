@@ -945,9 +945,9 @@ init_declarator
 
 storage_class_specifier
 	: EXTERN
-	{printf("| storage_class_specifier |\n");}
+	{ }
 	| STATIC
-	{printf("| storage_class_specifier |\n");}
+	{ }
 	;
 
 type_specifier
@@ -1150,16 +1150,16 @@ changetable
 
 pointer
 	: MUL type_qualifier_list_opt
-	{printf("| pointer |\n");}
+	{$$ = new symboltype("ptr");}
 	| MUL type_qualifier_list_opt pointer
-	{printf("| pointer |\n");}
+	{$$ = new symboltype("ptr",$3);}
 	;
 
 type_qualifier_list
 	: type_qualifier
-	{printf("| type_qualifier_list |\n");}
+	{ }
 	| type_qualifier_list type_qualifier
-	{printf("| type_qualifier_list |\n");}
+	{ }
 	;
 
 
@@ -1238,17 +1238,20 @@ designator
 
 statement
 	: labeled_statement
-	{printf("| statement |\n");}
+	{ }
 	| compound_statement
-	{printf("| statement |\n");}
+	{ $$ = $1;}
 	| expression_statement
-	{printf("| statement |\n");}
+	{   
+		$$=new Statement();
+		$$->nextlist=$1->nextlist;
+	}
 	| selection_statement
-	{printf("| statement |\n");}
+	{$$ = $1;}
 	| iteration_statement
-	{printf("| statement |\n");}
+	{$$ = $1;}
 	| jump_statement
-	{printf("| statement |\n");}
+	{$$ = $1;}
 	;
 
 labeled_statement

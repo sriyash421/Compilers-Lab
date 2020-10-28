@@ -12,17 +12,23 @@ basicType bt;
 
 sym::sym(string name, string type_, symboltype *arrtype, int width){
     (*this).name=name;
-    type=new symboltype(type_, arrtype,width);
-    size=computeSize(type);
-    offset=0;
-    val="-";
-    nested=NULL;
+    (*this).type=new symboltype(type_, arrtype,width);
+    (*this).size=computeSize(type);
+    (*this).offset=0;
+    (*this).val="-";
+    (*this).nested=NULL;
 }
 
 sym* sym::update(symboltype* type_){
     (*this).type = type_;//
     (*this).size = computeSize(type_);
     return this;
+}
+
+symboltype::symboltype(string type,symboltype* arrtype,int width){
+	(*this).type=type;
+	(*this).width=width;
+	(*this).arrtype=arrtype;
 }
 
 symtable::symtable(string name){
@@ -128,6 +134,13 @@ quad::quad(string result, string arg1, string op, string arg2){
 }
 
 quad::quad(string result, float arg1, string op, string arg2){
+	(*this).result = result;
+	(*this).arg1 = convertFloatToString(arg1);
+	(*this).op = op;
+	(*this).arg2 = arg2;
+}
+
+quad::quad(string result, int arg1, string op, string arg2){
 	(*this).result = result;
 	(*this).arg1 = convertFloatToString(arg1);
 	(*this).op = op;
@@ -387,7 +400,7 @@ bool compareSymbolType(sym *&s1, sym *&s2){
     return (bool)flag;
 }
 
-bool compareSymbolType(symboltype *&t1, symboltype *&t2){
+bool compareSymbolType(symboltype *t1, symboltype *t2){
     int flag = 0;
     if(t1 == NULL && t2 == NULL)
         return true;
