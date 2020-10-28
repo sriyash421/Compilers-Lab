@@ -6,3 +6,8 @@
 *.swp
 *.swo
 *.vscode
+*.gch
+*.output
+*.tab.c
+*.tab.h
+
