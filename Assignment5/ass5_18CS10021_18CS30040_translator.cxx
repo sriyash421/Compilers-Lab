@@ -3,18 +3,20 @@
 #include "string"
 #include "iostream"
 
-symtable *globalST;
-quadArray qA;
-string var_type;
-symtable *ST;
-sym *currSymPtr;
-basicType bt;
+symtable *globalST; // global symbol table
+quadArray qA;       // quad array
+string var_type;    // latest type
+symtable *ST;       // current symbol table
+sym *currSymPtr;    // current symbol
+basicType bt;       // basic types
 
 void debug(string s){
+    /*debugging function*/
     cout << "debugging !!! " << s << endl;
 }
 
 sym::sym(string name, string type_, symboltype *arrtype, int width){
+    /*Constructor for symbol*/
     (*this).name=name;
     (*this).type=new symboltype(type_, arrtype,width);
     (*this).size=computeSize(type);
@@ -24,23 +26,27 @@ sym::sym(string name, string type_, symboltype *arrtype, int width){
 }
 
 sym* sym::update(symboltype* type_){
+    /*Function to update a symbol*/
     (*this).type = type_;//
     (*this).size = computeSize(type_);
     return this;
 }
 
 symboltype::symboltype(string type,symboltype* arrtype,int width){
+    /*Constructor for symboltype*/
 	(*this).type=type;
 	(*this).width=width;
 	(*this).arrtype=arrtype;
 }
 
 symtable::symtable(string name){
+    /*Constructor for symbol table*/
     (*this).name=name;
     (*this).count = 0;//
 }
 
 sym *symtable::lookup(string name){
+    /*Function to look up or add(if non existent) a symbol by name in the ST*/
     sym *symbol;
     listsym_itr itr;
     itr = (*this).table.begin();//
@@ -56,6 +62,7 @@ sym *symtable::lookup(string name){
 }
 
 void symtable::update(){
+    /*Function to update the table*/
     list <symtable*> tb;
     int offset_;
     listsym_itr itr = (*this).table.begin();
@@ -80,7 +87,8 @@ void symtable::update(){
     }
 }
 
-void symtable::print(){ //ALL
+void symtable::print(){
+    /*Function to print the table*/
     int next_inst = 0;
     list<symtable *>table;
     
@@ -131,6 +139,7 @@ void symtable::print(){ //ALL
 }
 
 quad::quad(string result, string arg1, string op, string arg2){
+    /*Overloaded Constructor for quad*/
 	(*this).result = result;
 	(*this).arg1 = arg1;
 	(*this).op = op;
@@ -138,6 +147,7 @@ quad::quad(string result, string arg1, string op, string arg2){
 }
 
 quad::quad(string result, float arg1, string op, string arg2){
+    /*Overloaded Constructor for quad*/
 	(*this).result = result;
 	(*this).arg1 = convertFloatToString(arg1);
 	(*this).op = op;
@@ -145,6 +155,7 @@ quad::quad(string result, float arg1, string op, string arg2){
 }
 
 quad::quad(string result, int arg1, string op, string arg2){
+    /*Overloaded Constructor for quad*/
 	(*this).result = result;
 	(*this).arg1 = convertFloatToString(arg1);
 	(*this).op = op;
@@ -152,6 +163,7 @@ quad::quad(string result, int arg1, string op, string arg2){
 }
 
 void quad::print(){
+    /*Function to print quad*/
     int next_inst = 0;
     if(op=="+"){		
 		(*this).type();
@@ -252,19 +264,23 @@ void quad::print(){
 }
 
 void quad::type(){
+    /*Overloaded Function to print quad*/
     cout << (*this).result << " = " << (*this).arg1 << " " << (*this).op << " " << (*this).arg2;
 }
 
 void quad::type_(){
+    /*Overloaded Function to print quad*/
     cout << "if " << (*this).arg1 << " " << (*this).op << " " << (*this).arg2 << " goto " << (*this).result;
 }
 
 void basicType::addType(string type_, int size){
+    /*Function to add a basic type*/
     (*this).type.push_back(type_);
     (*this).size.push_back(size);
 }
 
 string generateSpaces(int n){
+    /*Function to generate spaced for prettying printing*/
     string temp="";
     while(n--){
         temp+=" ";
@@ -273,6 +289,7 @@ string generateSpaces(int n){
 }
 
 void quadArray::print(){
+    /*Function to print quad arrays*/
     for(int i=0; i<50; i++)
         cout << "__";
     cout << "\n";
@@ -298,61 +315,67 @@ void quadArray::print(){
 }
 
 string convertFloatToString(float x){
+    /*Function to convert float to string*/
     string temp = to_string(x);
     return temp;
 }
 
 string convertIntToString(int x){
+    /*Function to convert int to string*/
     string temp = to_string(x);
     return temp;
 }
 
 void emit(string op, string result, string arg1, string arg2){
+    /*Overloaded Function to emit a quad*/
     quad *q = new quad(result, arg1, op, arg2);
     qA.array.push_back(*q);
 }
 
 void emit(string op, string result, int arg1, string arg2){
+    /*Overloaded Function to emit a quad*/
     quad *q = new quad(result, arg1, op, arg2);
     qA.array.push_back(*q);
 }
 
 void emit(string op, string result, float arg1, string arg2){
+    /*Overloaded Function to emit a quad*/
     quad *q = new quad(result, arg1, op, arg2);
     qA.array.push_back(*q);
 }
 
-sym* convertType(sym* sym_, string rettype){
-    sym* temp = gentemp(new symboltype(rettype));
+sym* convertType(sym* sym_, string return_type){
+    /*Function to convert to symbol to given return type*/
+    sym* temp = gentemp(new symboltype(return_type));
 
     if((*sym_).type->type == "int"){
-		if(rettype == "float"){
+		if(return_type == "float"){
 			emit("=",temp->name,"int2float("+(*sym_).name+")");
 			return temp;
 		}
-		else if(rettype == "char"){
+		else if(return_type == "char"){
 			emit("=",temp->name,"int2char("+(*sym_).name+")");
 			return temp;
 		}
 		return sym_;
 	}
 	else if((*sym_).type->type == "float"){
-		if(rettype == "int"){
+		if(return_type == "int"){
 			emit("=",temp->name,"float2int("+(*sym_).name+")");
 			return temp;
 		}
-		else if(rettype == "char"){
+		else if(return_type == "char"){
 			emit("=",temp->name,"float2char("+(*sym_).name+")");
 			return temp;
 		}
 		return sym_;
 	}
 	else if((*sym_).type->type == "char"){
-		if(rettype == "int"){
+		if(return_type == "int"){
 			emit("=",temp->name,"char2int("+(*sym_).name+")");
 			return temp;
 		}
-		if(rettype == "double"){
+		if(return_type == "double"){
 			emit("=",temp->name,"char2double("+(*sym_).name+")");
 			return temp;
 		}
@@ -362,16 +385,17 @@ sym* convertType(sym* sym_, string rettype){
 }
 
 void changeTable(symtable *newTable){
-    ST = newTable;
-   
-    
+    /*Function to change current ST*/
+    ST = newTable;   
 }
 
 bool typeCheck(Expression e1, Expression e2){
+    /*Function to compare two expression types*/
     return (e1.type.compare(e2.type) == 0);
 }
 
 Expression *convertIntToBool(Expression *e){
+    /*Function to convert expression from int to bool*/
     if(e->type != "bool"){
         e->falselist = makelist(nextinstr());
         emit("==", "", e->loc->name, "0");
@@ -381,6 +405,7 @@ Expression *convertIntToBool(Expression *e){
 }
 
 Expression *convertBoolToInt(Expression *e){
+    /*Function to convert expression from bool to init*/
     if(e->type != "int"){
         e->loc = gentemp(new symboltype("int"));
         backpatch(e->truelist, nextinstr());
@@ -393,6 +418,7 @@ Expression *convertBoolToInt(Expression *e){
 }
 
 bool compareSymbolType(sym *&s1, sym *&s2){
+    /*Function to compare two symbol types*/
     symboltype *type1 = s1->type;
     symboltype *type2 = s2->type;
     int flag = 0;
@@ -407,6 +433,7 @@ bool compareSymbolType(sym *&s1, sym *&s2){
 }
 
 bool compareSymbolType(symboltype *t1, symboltype *t2){
+    /*Function to compare two symbol types*/
     int flag = 0;
     if(t1 == NULL && t2 == NULL)
         return true;
@@ -417,6 +444,7 @@ bool compareSymbolType(symboltype *t1, symboltype *t2){
 }
 
 void backpatch(list_int l1, int addr){
+    /*Function to backpatch list of instructions to address*/
     string str_ =  convertIntToString(addr);
     for(list_int:: iterator itr = l1.begin(); itr != l1.end(); itr++){
         qA.array[*itr].result = str_;
@@ -424,16 +452,19 @@ void backpatch(list_int l1, int addr){
 }
 
 list_int makelist(int init){
+    /*Function to create a list*/
     list_int temp(1, init);
     return temp;
 }
 
 list_int merge(list_int &l1, list_int &l2){
+    /*Function to merge two lists*/
     l1.merge(l2);
     return l1;
 }
 
 sym *gentemp(symboltype *t, string str_){
+    /*Function to generate temporary symbols and add it to current table*/
     string temp_name = "t"+convertIntToString(ST->count++);
     sym *s = new sym(temp_name);
     s->type = t;
@@ -444,6 +475,7 @@ sym *gentemp(symboltype *t, string str_){
 }
 
 int computeSize(symboltype *type_){
+    /*Function to compute size of given symbol type*/
     if(type_->type.compare("void") == 0)
         return bt.size[1];
     else if(type_->type.compare("char") == 0)
@@ -463,6 +495,7 @@ int computeSize(symboltype *type_){
 }
 
 string printType(symboltype *type_){
+    /*Function to print given symbol type*/
     if(type_ == NULL)
         return bt.type[0];
 	if(type_->type.compare("void") == 0)
@@ -484,10 +517,12 @@ string printType(symboltype *type_){
 }
 
 int nextinstr(){
+    /*Function to find instruction number*/
 	return qA.array.size();
 }
 
 int main(){
+    /*Driver function*/
     bt.addType("null",0);
 	bt.addType("void",0);
 	bt.addType("char",1);

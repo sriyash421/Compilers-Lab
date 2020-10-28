@@ -3,3 +3,6 @@
 *.a
 *.zip
 *.yy*
+*.swp
+*.swo
+*.vscode
