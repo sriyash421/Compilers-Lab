@@ -6,7 +6,7 @@ int multiply(float a, float b)
 	return mul;
 }
 
-bool swap(int* a, int* b) // function to swap two numbers 
+int swapTwoNumbers(int* a, int* b) // function to swap two numbers 
 {
 	int temp = *a;
 	*a = *b;
@@ -20,6 +20,6 @@ int main()
 	float x=2.5;
 	q = multiply(x,1.2);
 	r=10;
-	bool check = swapTwoNumbers(&q,&r);
-	return;
+	int check = swapTwoNumbers(&q,&r);
+	return 0;
 }
