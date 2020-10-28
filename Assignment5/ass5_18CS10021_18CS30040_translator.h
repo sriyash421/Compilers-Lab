@@ -1,11 +1,10 @@
-// #ifndef _TRANSLATE_H
+#ifndef _TRANSLATE_H
 #define _TRANSLATE_H
 
 #include <bits/stdc++.h>
 using namespace std;
 extern char *yytext;
 extern int yyparse();
-
 
 
 #define listsym_itr list<sym>::iterator
@@ -113,6 +112,7 @@ bool compareSymbolType(symboltype *t1, symboltype *t2);
 int computeSize(symboltype *);
 string printType(symboltype *);
 void changeTable(symtable *);
+void debug(string s);
 
 struct Statement{
     list_int nextlist;
@@ -137,4 +137,4 @@ Expression *convertIntToBool(Expression *);
 Expression *convertBoolToInt(Expression *);
 bool typeCheck(Expression, Expression);
 
-// #endif
+#endif

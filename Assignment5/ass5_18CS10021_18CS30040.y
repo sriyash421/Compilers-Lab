@@ -51,6 +51,7 @@
 %type <num_params> argument_expression_list argument_expression_list_opt
 
 
+
 //Expressions
 %type <expr>
 	expression
@@ -123,7 +124,7 @@ N
 constant
 	: INTEGER_CONSTANT 
 	{
-		$$=new Expression();	
+		$$ =  new Expression();	
 		string p=convertIntToString($1);
 		$$->loc=gentemp(new symboltype("int"),p);
 		emit("=",$$->loc->name,p);
@@ -153,7 +154,6 @@ primary_expression
 	}
 	| constant
 	{
-		$$ = new Expression();
 		$$ = $1;
 	}
 	| STRING_LITERAL
@@ -1091,11 +1091,9 @@ direct_declarator
 		if($1->type->type !="void") 
 		{
 			sym *s = ST->lookup("return");         //lookup for return value	
-			s->update($1->type);
-
-	
+			s->update($1->type);	
 		}
-		$1->nested=ST;       	
+		$1->nested = ST;       	
 		ST->parent = globalST;
 		changeTable(globalST);				// Come back to globalsymbol table
 		currSymPtr = $$;
@@ -1106,7 +1104,7 @@ direct_declarator
 	{        //similar as above
 
 		ST->name = $1->name;
-		if($1->type->type !="void") 
+			if($1->type->type !="void") 
 		{
 			sym *s = ST->lookup("return");
 			s->update($1->type);
@@ -1117,6 +1115,7 @@ direct_declarator
 		ST->parent = globalST;
 		changeTable(globalST);				// Come back to globalsymbol table
 		currSymPtr = $$;
+		
 
 	}
 	;
@@ -1130,20 +1129,22 @@ type_qualifier_list_opt
 changetable
 	: %empty 
 	{ 														// Used for changing to symbol table for a function
+		
+		
+		
 		if(currSymPtr->nested==NULL) 
 		{
-	
+			
 			changeTable(new symtable(""));	// Function symbol table doesn't already exist
 
 		}
 		else 
 		{
-	
+			
+			
 			changeTable(currSymPtr ->nested);						// Function symbol table already exists
-
+			
 			emit("label", ST->name);
-
-	
 		}
 	}
 	;
@@ -1409,23 +1410,24 @@ external_declaration
 	;
 
 function_definition
-	: declaration_specifiers declarator declaration_list_opt compound_statement
+	: declaration_specifiers declarator declaration_list_opt changetable compound_statement
 	{	
 		ST->parent = globalST;
 		changeTable(globalST);               
 	}
 	;
 
-declaration_list_opt
-	: declaration_list
-	| %empty
-	;
 
 declaration_list
 	: declaration
 	{ }
 	| declaration_list declaration
 	{ }
+	;
+
+declaration_list_opt
+	: %empty {  }
+	| declaration_list   {  }
 	;
 
 %%

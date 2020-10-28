@@ -10,6 +10,10 @@ symtable *ST;
 sym *currSymPtr;
 basicType bt;
 
+void debug(string s){
+    cout << "debugging !!! " << s << endl;
+}
+
 sym::sym(string name, string type_, symboltype *arrtype, int width){
     (*this).name=name;
     (*this).type=new symboltype(type_, arrtype,width);
@@ -52,7 +56,7 @@ sym *symtable::lookup(string name){
 }
 
 void symtable::update(){
-    list <symtable*> table;
+    list <symtable*> tb;
     int offset_;
     listsym_itr itr = (*this).table.begin();
     while(itr != (*this).table.end()){
@@ -65,14 +69,14 @@ void symtable::update(){
             offset_ = itr->offset+itr->size;
         }
         if(itr->nested!=NULL)
-            table.push_back(itr->nested);
+            tb.push_back(itr->nested);
         itr++;
     }
     list <symtable *>::iterator itr_;
-    itr_ = table.begin();
-    while(itr_ != table.begin()){
+    itr_ = tb.begin();
+    while(itr_ != tb.end()){
         (*itr_)->update();
-        itr++;
+        itr_++;
     }
 }
 
@@ -359,6 +363,8 @@ sym* convertType(sym* sym_, string rettype){
 
 void changeTable(symtable *newTable){
     ST = newTable;
+   
+    
 }
 
 bool typeCheck(Expression e1, Expression e2){
