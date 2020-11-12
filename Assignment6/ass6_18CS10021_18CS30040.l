@@ -119,11 +119,6 @@ PUNCTUATOR        	"["|"]"|"("|")"|"{"|"}"|"."|"->"|"++"|"--"|"&"|"*"|"+"|"-"|"~
 	return STRING_LITERAL;
 }
 
-{IDENTIFIER} {
-	yylval.symp = ST->lookup(yytext);
-	return IDENTIFIER;
-}
-
 
 {PUNCTUATOR}	{
 	if(strcmp(yytext,"[") == 0) return '[';
