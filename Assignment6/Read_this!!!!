@@ -1,0 +1,5 @@
+Find and Replace this in translator files
+curr_st => Current_ST
+glob_quad => global_quad_table
+symbol_tab => symb_tab
+arglistStr => ArgumentList

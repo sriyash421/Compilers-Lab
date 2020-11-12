@@ -27,7 +27,7 @@ class Array;
 struct decstring;
 struct idstring;
 struct expresn;
-struct argliststring;
+struct ArgumentList;
 ext type_n *glob_type;
 ext int glob_width, next_instr, temp_count; 
 ext symtab *glob_st, *Current_ST; //Global symbol table pointer
@@ -110,10 +110,10 @@ public:
 	basic_val i_val;//to store the initialized value for an element stored at symbol table
 	type_n *tp_n;//for storing the type of element
 	symtab *nest_tab; //to store the pointer to the symbol table to which the current element belongs to
-	Array *arr;//to store the pointer to an array if its an array type
-	funct *fun;//to store the pointer to a function if its an function
+	Array *arr;
+	funct *fun;
 	void createarray();
-	symdata(string n=""); //name is initialized to null that will be used for naming temporary variables
+	symdata(string n=""); 
 	bool isGlobal,isdone,ispresent,isptrarr,isArray, isFunction, isInitialized;
 };	
 
@@ -126,8 +126,8 @@ class symtab{
 	~symtab(); //destructor
 	symdata* lookup(string );// Lookup function searches the variable with name. If the variable is present then returns its pointer location else creates a new entry with its name and returns that pointer
 	symdata* lookup_2(string );//To handle global variables
-	symdata* search(string ); //it searches for the variable and returns the oiter to it if present
-	symdata* gentemp(type_n* ); //gentemp creates a new element in the symbol table with the type provided at the time of constructing
+	symdata* search(string ); 
+	symdata* gentemp(type_n* ); 
 	int no_params;
 	void print();
 	void update(symdata*,type_n* ,basic_val , symtab *next = NULL);//	
@@ -170,7 +170,7 @@ struct decstring {
 	type_n *type;						
 	int width;					
 };
-struct argliststring{
+struct ArgumentList{
 	vector<expresn*> *arguments;
 };
 
