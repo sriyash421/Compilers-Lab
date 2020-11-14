@@ -5,7 +5,7 @@ int printStr(char  * s)
 {
     int size = 0;
     int buffer_length = 0;
-    while(s[size]! = '\0')
+    while(s[size] != '\0')
     {
         size++;
         buffer_length  =  buffer_length +1;
@@ -82,4 +82,3 @@ int readInt (int *  eP) {
     }
     return sum * sign;
 }
-

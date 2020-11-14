@@ -24,8 +24,9 @@ class symtab;
 class quad_arr; 
 class funct;
 class Array;
-struct decstring;
-struct idstring;
+//vd totest(Str x);//to test
+struct decStr;
+struct idStr;
 struct expresn;
 struct ArgumentList;
 ext type_n *glob_type;
@@ -35,7 +36,10 @@ ext quad_arr global_quad_table; //to store all the quads that will be generated 
 
 enum types
 {
-	tp_void=0,tp_bool,tp_arr,tp_func,tp_char,tp_int,tp_double,tp_ptr,
+	tp_void=0,	tp_bool,
+	tp_arr,	tp_func,
+	tp_char,	tp_int,
+	tp_double,	tp_ptr,
 };
 
 typedef struct list
@@ -47,15 +51,68 @@ typedef struct list
 enum opcode{
 
 	//Binary Assignment Operator
-	Q_PLUS=1,Q_MINUS,Q_MULT,Q_DIVIDE,Q_MODULO,Q_LEFT_OP,Q_RIGHT_OP,Q_XOR,Q_AND,Q_OR,Q_LOG_AND,Q_LOG_OR,Q_LESS,Q_LESS_OR_EQUAL,Q_GREATER_OR_EQUAL,Q_GREATER,Q_EQUAL,Q_NOT_EQUAL,	//Unary Assignment Operator
-	Q_UNARY_MINUS,Q_UNARY_PLUS,Q_COMPLEMENT,Q_NOT,	//Copy Assignment
-	Q_ASSIGN,Q_GOTO,	//Conditional Jump
-	Q_IF_EQUAL,Q_IF_NOT_EQUAL,Q_IF_EXPRESSION,Q_IF_NOT_EXPRESSION,Q_IF_LESS,Q_IF_GREATER,Q_IF_LESS_OR_EQUAL,Q_IF_GREATER_OR_EQUAL,	//Type Conversions
-	Q_CHAR2INT,Q_CHAR2DOUBLE,Q_INT2CHAR,Q_DOUBLE2CHAR,Q_INT2DOUBLE,Q_DOUBLE2INT,
+	Q_PLUS=1,
+	Q_MINUS,
+	Q_MULT,
+	Q_DIVIDE,
+	Q_MODULO,
+	Q_LEFT_OP,
+	Q_RIGHT_OP,
+	Q_XOR,
+	Q_AND,
+	Q_OR,
+	Q_LOG_AND,
+	Q_LOG_OR,
+	Q_LESS,
+	Q_LESS_OR_EQUAL,
+	Q_GREATER_OR_EQUAL,
+	Q_GREATER,
+	Q_EQUAL,
+	Q_NOT_EQUAL,
+
+	//Unary Assignment Operator
+	Q_UNARY_MINUS,
+	Q_UNARY_PLUS,
+	Q_COMPLEMENT,
+	Q_NOT,
+
+	//Copy Assignment
+	Q_ASSIGN,
+	Q_GOTO,
+
+	//Conditional Jump
+	Q_IF_EQUAL,
+	Q_IF_NOT_EQUAL,
+	Q_IF_EXPRESSION,
+	Q_IF_NOT_EXPRESSION,
+	Q_IF_LESS,
+	Q_IF_GREATER,
+	Q_IF_LESS_OR_EQUAL,
+	Q_IF_GREATER_OR_EQUAL,
+
+	//Type Conversions
+	Q_CHAR2INT,
+	Q_CHAR2DOUBLE,
+	Q_INT2CHAR,
+	Q_DOUBLE2CHAR,
+	Q_INT2DOUBLE,
+	Q_DOUBLE2INT,
+
+
 	//Procedure Call
-	Q_PARAM,Q_CALL,Q_RETURN,	//Pointer Assignment Operator
-	Q_LDEREF,Q_RDEREF,Q_ADDR,	//Array Indexing
-	Q_RINDEX,Q_LINDEX,
+	Q_PARAM,
+	Q_CALL,
+	Q_RETURN,
+
+	//Pointer Assignment Operator
+	Q_LDEREF,
+	Q_RDEREF,
+	Q_ADDR,
+
+	//Array Indexing
+	Q_RINDEX,
+	Q_LINDEX,
+
 };
 
 union basic_val
@@ -69,7 +126,7 @@ class type_n{
 public:
 	int size;    // to save the size of the type
 	types basetp; // to save the basic type of the elemnt
-	type_n *next; // to save next type_n type for Arrays
+	type_n *next; // to save next type_n type for arrays
 	type_n(types t,int sz=1, type_n *n=NULL); //constuctor
 	int getSize(); //returns the size
 	types getBasetp(); 
@@ -121,7 +178,7 @@ class symtab{
     public:
 	string name;			// name of the symbol
 	int offset, start_quad, end_quad;				// final offset of this symbol table that will be used in the update function
-	vector<symdata*> symbol_tab; //maintaining a list of symbol tables
+	vector<symdata*> symb_tab; //maintaining a list of symbol tables
 	symtab();  //constructor
 	~symtab(); //destructor
 	symdata* lookup(string );// Lookup function searches the variable with name. If the variable is present then returns its pointer location else creates a new entry with its name and returns that pointer
@@ -148,7 +205,7 @@ struct expresn{
 	symdata* loc;
 	type_n* type;
 	list* falselist, *truelist;
-	bool isArray,isPointer,isstringing;
+	bool isArray,isPointer,isString;
 	int ind_str;
 	symdata *poss_array,*arr;
 };
@@ -166,7 +223,7 @@ class quad{
         quad(opcode,string,string,string);
 };
 
-struct decstring {
+struct decStr {
 	type_n *type;						
 	int width;					
 };
@@ -174,7 +231,7 @@ struct ArgumentList{
 	vector<expresn*> *arguments;
 };
 
-struct idstring {
+struct idStr {
 	symdata *loc;					
 	string *name;						
 };

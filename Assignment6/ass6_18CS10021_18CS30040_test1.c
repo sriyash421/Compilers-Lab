@@ -1,9 +1,9 @@
-// declarations ( variables(int, float, char), 1D array, 2D array, functions) and arithmetic operations
+// declarations ( variables(int, float, char), 1D Array, 2D Array, functions) and arithmetic operations
 
 // global declarations
 float d = 2.3;
-int s, w[10];	// 1D array declaration
-float z[2][2];	// 2D array declaration
+int s, w[10];	// 1D Array declaration
+float z[2][2];	// 2D Array declaration
 int a = 4, *p, b;	//pointer declaration
 void quotient(int i, float d); //function declaration		
 
