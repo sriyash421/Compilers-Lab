@@ -1,7 +1,7 @@
 TinyC: y.tab.o lex.yy.o ass6_18CS10021_18CS30040_translator.o ass6_18CS10021_18CS30040_target_translator.o
 	@mkdir -p binaries
 	g++ -g ass6_18CS10021_18CS30040_translator.o ass6_18CS10021_18CS30040_target_translator.o lex.yy.o y.tab.o -lfl -o binaries/TinyC
-	@echo "\nMake successful. The binariesary generated is ./binaries/TinyC"
+	@echo "\nMake successful. The binariesary generated is ./binaries/TinyC\n Run (make run) to generate test files for "
 
 lex.yy.c: ass6_18CS10021_18CS30040.l
 	flex ass6_18CS10021_18CS30040.l

@@ -187,7 +187,6 @@ postfix_expression :            primary_expression {
                                                                         
                                                                         char temp[10];
                                                                         
-                                                                        //printf("hoooooooooooooooooooooooooooooooooo %s\n",$1.loc->name.c_str());
                                                                         sprintf(temp,"%d",$1.type->next->getSize());
                                                                         
                                                                         
@@ -259,7 +258,6 @@ postfix_expression :            primary_expression {
                                                                                                     
                                                                                                     sprintf(str,"%ld",$3.arguments->size());
                                                                                                     
-                                                                                                    //printf("function %s-->%d\n",$1.loc->name.c_str(),$1.type->basetp);
                                                                                                     if($1.type->basetp!=tp_void)
                                                                                                         global_quad_table.emit(Q_CALL,$1.loc->name,str,$$.loc->name);
                                                                                                     else
@@ -351,7 +349,6 @@ argument_expression_list:       assignment_expression {
                                                         
                                                         $$.arguments->push_back(tex);
                                                         
-                                                        //printf("name2-->%s\n",tex->loc->name.c_str());
                                                         
                                                      }|
                                 argument_expression_list ',' assignment_expression {
@@ -539,7 +536,6 @@ cast_expression :               unary_expression {
                                                         
                                                         //$$.poss_array=$1.arr;
                                                         
-                                                        //printf("name --> %s\n",$$.loc->name.c_str());
                                                     }
                                                     else if($1.isPointer == true)
                                                     {
@@ -854,10 +850,8 @@ assignment_expression:          conditional_expression {
                                                         }|
                                 unary_expression assignment_operator assignment_expression {
                                                                                                 //LDereferencing
-                                                                                                //printf("hoboo --> %s\n",$1.loc->name.c_str());
                                                                                                 if($1.isPointer)
                                                                                                 {
-                                                                                                    //printf("Hookah bar\n");
                                                                                                     global_quad_table.emit(Q_LDEREF,$3.loc->name,$1.loc->name);
                                                                                                     
                                                                                                 }
@@ -875,10 +869,8 @@ assignment_expression:          conditional_expression {
                                                                                                 
                                                                                                 $$.type = $$.loc->tp_n;
                                                                                                 
-                                                                                                //printf("assgi hobobob %s == %s\n",)
                                                                                                 global_quad_table.emit(Q_ASSIGN,$3.loc->name,$$.loc->name);
                                                                                                 
-                                                                                                //printf("assign %s = %s\n",$3.loc->name.c_str(),$$.loc->name.c_str());
                                                                                             };
 
 /*A constant value of this expression exists*/
@@ -956,7 +948,6 @@ init_declarator:                declarator {
                                                                         
                                                                         if(temp_ver!=NULL)
                                                                         {
-                                                                            //printf("po %s = %s\n",$1.loc->name.c_str(),$3.loc->name.c_str());
                                                                             temp_ver->i_val.int_val= $3.loc->i_val.int_val;
                                                                             
                                                                             temp_ver->isInitialized = true;
@@ -980,7 +971,6 @@ init_declarator:                declarator {
                                                                         }
                                                                     }
                                                                 }
-                                                                //printf("%s = %s\n",$1.loc->name.c_str(),$3.loc->name.c_str());
                                                                 //typecheck(&$1,&$3,true);
                                                                 global_quad_table.emit(Q_ASSIGN,$3.loc->name,$1.loc->name);
                                                                 
@@ -1032,7 +1022,6 @@ enum_specifier:                 ENUM identifier_opt '{' enumerator_list '}' {}|
 identifier_opt:                 IDENTIFIER {
                                                 $$.loc  = Current_ST->lookup(*$1.name);
                                                 
-                                                //printf("%s\n",(*$1.name).c_str());
                                                 
                                                 $$.type = new type_n(glob_type->basetp);
                                                 
@@ -1108,9 +1097,6 @@ pointer_opt:                    pointer {
 direct_declarator:              IDENTIFIER {
                                                     $$.loc = Current_ST->lookup(*$1.name);
                                                     
-                                                    //printf("name: %s\n",Current_ST->name.c_str());
-                                                    //printf("2nd %s\n",(*$1.name).c_str());
-                                                    //printf("Hello5\n");
                                                     if($$.loc->var_type == "")
                                                     {
                                                         //Type initialization
@@ -1128,7 +1114,6 @@ direct_declarator:              IDENTIFIER {
                                                         
                                                     }|
                                 direct_declarator '[' type_qualifier_list_opt assignment_expression_opt ']' {
-                                                                                                                //printf("Hello\n");
                                                                                                                 if($1.type->basetp == tp_arr)
                                                                                                                 {
                                                                                                                     /*if type is already an arr*/
@@ -1166,7 +1151,6 @@ direct_declarator:              IDENTIFIER {
                                 direct_declarator '(' parameter_type_list ')' {
                                                                                    int params_no=Current_ST->no_params;
                                                                                     
-                                                                                   //printf("no.ofparameters-->%d\n",params_no);
                                                                                     
                                                                                    Current_ST->no_params=0;
                                                                                     
@@ -1176,12 +1160,10 @@ direct_declarator:              IDENTIFIER {
                                                                                     
                                                                                    for(int i=Current_ST->symb_tab.size()-1;i>=0;i--)
                                                                                    {
-                                                                                        //printf("what-->%s\n",Current_ST->symb_tab[i]->name.c_str());
                                                                                         
                                                                                     }
                                                                                    for(int i=Current_ST->symb_tab.size()-1;i>=0;i--)
                                                                                    {
-                                                                                        //printf("mazaknaminST-->%s\n",Current_ST->symb_tab[i]->name.c_str());
                                                                                         string detect=Current_ST->symb_tab[i]->name;
                                                                                         
                                                                                         if(over_params==0)
@@ -1214,14 +1196,10 @@ direct_declarator:              IDENTIFIER {
                                                                                    }
                                                                                    params_no+=dec_params;
                                                                                     
-                                                                                   //printf("no.ofparameters-->%d\n",params_no);
                                                                                    int temp_i=Current_ST->symb_tab.size()-params_no;
                                                                                     
                                                                                    symdata * new_func = glob_st->search(Current_ST->symb_tab[temp_i-1]->name);
                                                                                     
-                                                                                    //printf("Hello1\n");
-                                                                                    //printf("%s\n",Current_ST->symb_tab[0]->name.c_str());
-                                                                                    //printf("no. of params-> %d\n",Current_ST->no_params);
                                                                                     if(new_func == NULL)
                                                                                     {
                                                                                         new_func = glob_st->lookup(Current_ST->symb_tab[temp_i-1]->name);
@@ -1238,7 +1216,6 @@ direct_declarator:              IDENTIFIER {
                                                                                                 
                                                                                                 if(glob_var==NULL)
                                                                                                 {
-                                                                                                    //printf("glob_var-->%s\n",Current_ST->symb_tab[i]->name.c_str());
                                                                                                     
                                                                                                     glob_var=glob_st->lookup(Current_ST->symb_tab[i]->name);
                                                                                                     
@@ -1280,9 +1257,7 @@ direct_declarator:              IDENTIFIER {
                                                                                             
                                                                                             Current_ST->name = Current_ST->symb_tab[temp_i-1]->name;
                                                                                             
-                                                                                            //printf("naminST-->%s\n",Current_ST->symb_tab[temp_i-1]->name.c_str());
                                                                                             
-                                                                                            //printf("oye\n");
                                                                                             /*for(int i=0;i<Current_ST->symb_tab.size();i++)
                                                                                             {
                                                                                                 printf("naminST-->%s\n",Current_ST->symb_tab[i]->name.c_str());
@@ -1302,7 +1277,6 @@ direct_declarator:              IDENTIFIER {
                                                                                             
                                                                                             for(int i=(Current_ST->symb_tab.size())-params_no;i<Current_ST->symb_tab.size();i++)
                                                                                             {
-                                                                                                //printf("%s -> %s\n",Current_ST->symb_tab[i]->name.c_str(),Current_ST->symb_tab[i]->var_type.c_str());
                                                                                                 
                                                                                                 Current_ST->symb_tab[i]->var_type = "param";
                                                                                                 
@@ -1330,12 +1304,8 @@ direct_declarator:              IDENTIFIER {
                                                                                 
                                                                                 symdata * new_func = glob_st->search(Current_ST->symb_tab[temp_i-1]->name);
                                                                                 
-                                                                                //printf("Hello3\n");
-                                                                                //printf("glob_st %s\n",Current_ST->symb_tab[temp_i-1]->name.c_str());
-                                                                                //printf("symb_tabsize %d\n",Current_ST->symb_tab.size());
                                                                                 /*if(Current_ST->symb_tab.size()>2)
                                                                                 {
-                                                                                    //printf("Namestarted\n");
                                                                                     
                                                                                     printf("%s\n",Current_ST->symb_tab[0]->name.c_str());
                                                                                     
@@ -1360,7 +1330,6 @@ direct_declarator:              IDENTIFIER {
                                                                                             
                                                                                             if(glob_var==NULL)
                                                                                             {
-                                                                                                //printf("glob_var-->%s\n",Current_ST->symb_tab[i]->name.c_str());
                                                                                                 
                                                                                                 glob_var=glob_st->lookup(Current_ST->symb_tab[i]->name);
                                                                                                 
@@ -1697,7 +1666,6 @@ external_declaration:           function_definition                             
                                                                                         {
                                                                                             if(Current_ST->symb_tab[i]->nest_tab==NULL)
                                                                                                 {
-                                                                                                    //printf("global --> %s\n",Current_ST->symb_tab[i]->name.c_str());
                                                                                                     if(Current_ST->symb_tab[i]->var_type=="local"||Current_ST->symb_tab[i]->var_type=="temp")
                                                                                                     {
                                                                                                         symdata *glob_var=glob_st->search(Current_ST->symb_tab[i]->name);
@@ -1706,7 +1674,6 @@ external_declaration:           function_definition                             
                                                                                                         {
                                                                                                             glob_var=glob_st->lookup(Current_ST->symb_tab[i]->name);
                                                                                                             
-                                                                                                            //printf("glob_var-->%s\n",Current_ST->symb_tab[i]->name.c_str());
                                                                                                             
                                                                                                             int t_size=Current_ST->symb_tab[i]->tp_n->getSize();
                                                                                                             
@@ -1739,7 +1706,6 @@ external_declaration:           function_definition                             
 function_definition:    declaration_specifiers declarator declaration_list_opt compound_statement {
                                                                                                     symdata * func = glob_st->lookup($2.loc->name);
                                                                                                     
-                                                                                                    //printf("Hello2\n");
                                                                                                     func->nest_tab->symb_tab[0]->tp_n = CopyType(func->tp_n);
                                                                                                     
                                                                                                     func->nest_tab->symb_tab[0]->name = "retVal";
